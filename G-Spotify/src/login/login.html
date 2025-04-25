@@ -4,32 +4,22 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Login | G-Spotify</title>
-    <link rel="icon" href="/assets/Spotify_Icon_RGB_Green.png" />
+    <title>Spotify Player</title>
+    <link rel="icon" type="image/png" href="../assets/Spotify_Icon_RGB_Green.png" />
     <link rel="stylesheet" href="../style.css" />
   </head>
-  <body class="h-screen bg-black flex items-center justify-center">
-    <main class="flex flex-col items-center gap-8 text-white">
-      <!-- Logo -->
-      <img
-        src="../assets/Spotify_Logo_RGB_White.png"
-        alt="G-Spotify Logo"
-        class="h-20"
-      />
-
-      <!-- Login Button -->
-      <input
-        id="login-to-spotify"
-        type="button"
-        value="Login to Spotify"
-        class="px-8 py-3 rounded-md bg-green-500 hover:bg-green-600 transition font-semibold cursor-pointer text-black"
-      />
-
-      <!-- Footer or version info -->
-      <p class="text-sm text-gray-400">G-Spotify Clone · Powered by Spotify API</p>
+  <body class="h-screen bg-green">
+    <main class="flex h-full w-full items-center justify-center">
+      <section class="flex flex-col items-center gap-8">
+        <img class="h-[20vh]" src="../assets/Spotify_Logo_RGB_Black.png" alt="spotify image" />
+        <input
+          id="login-to-spotify"
+          type="button"
+          value="Login to Spotify"
+          class="h-12 w-64 rounded-md bg-black text-white hover:cursor-pointer"
+        />
+      </section>
     </main>
-
-    <!-- Load login logic -->
-    <script type="module" src="./login.js"></script>
+    <script type="module" src="login.js"></script>
   </body>
 </html>
