@@ -1,22 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>Spotify Auth Redirect</title>
-  <script type="module">
-    const { hash } = window.location;
-    const params = new URLSearchParams(hash.substring(1));
-    const accessToken = params.get("access_token");
-    const tokenType = params.get("token_type");
-    const expiresIn = params.get("expires_in");
+  <head>
+    <meta charset="UTF-8" />
+    <title>Spotify Auth Callback</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      body {
+        font-family: sans-serif;
+        background: #121212;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+      }
+    </style>
+  </head>
+  <body>
+    <div>Authenticating with Spotify...</div>
+    <script>
+      const params = new URLSearchParams(window.location.hash.substring(1));
+      const accessToken = params.get("access_token");
+      const tokenType = params.get("token_type");
+      const expiresIn = params.get("expires_in");
 
-    if (window.opener && !window.opener.closed && accessToken) {
-      window.opener.setItemsInLocalStorage({ accessToken, tokenType, expiresIn });
-    }
-    window.close();
-  </script>
-</head>
-<body>
-  Redirecting...
-</body>
+      if (window.opener && accessToken) {
+        window.opener.setItemsInLocalStorage({
+          accessToken,
+          tokenType,
+          expiresIn
+        });
+        window.close();
+      } else {
+        document.body.textContent = "⚠️ Authentication failed.";
+      }
+    </script>
+  </body>
 </html>
