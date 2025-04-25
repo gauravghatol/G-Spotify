@@ -1,0 +1,46 @@
+<!-- src/login/callback.html -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Spotify Auth Redirect</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      body {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        font-family: sans-serif;
+        background: #121212;
+        color: white;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="message">Authenticating with Spotify...</div>
+
+    <script>
+      const hashParams = window.location.hash
+        .substring(1)
+        .split("&")
+        .reduce((acc, param) => {
+          const [key, value] = param.split("=");
+          acc[key] = value;
+          return acc;
+        }, {});
+
+      if (window.opener && hashParams.access_token) {
+        window.opener.setItemsInLocalStorage({
+          accessToken: hashParams.access_token,
+          tokenType: hashParams.token_type,
+          expiresIn: hashParams.expires_in
+        });
+        window.close();
+      } else {
+        document.getElementById("message").innerText =
+          "Login failed. Please try again.";
+      }
+    </script>
+  </body>
+</html>
