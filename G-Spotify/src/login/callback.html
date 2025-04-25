@@ -1,49 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Spotify Auth Redirect</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <style>
-      body {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        height: 100vh;
-        background-color: #121212;
-        color: white;
-        font-family: system-ui, sans-serif;
-      }
-    </style>
-  </head>
-  <body>
-    <div id="message">Authenticating with Spotify...</div>
+<head>
+  <meta charset="UTF-8" />
+  <title>Spotify Auth Redirect</title>
+  <script type="module">
+    const { hash } = window.location;
+    const params = new URLSearchParams(hash.substring(1));
+    const accessToken = params.get("access_token");
+    const tokenType = params.get("token_type");
+    const expiresIn = params.get("expires_in");
 
-    <script>
-      // Parse hash from Spotify redirect URI
-      const hashParams = window.location.hash
-        .substring(1)
-        .split("&")
-        .reduce((acc, param) => {
-          const [key, value] = param.split("=");
-          acc[key] = value;
-          return acc;
-        }, {});
-
-      const { access_token, token_type, expires_in } = hashParams;
-
-      if (window.opener && access_token) {
-        window.opener.setItemsInLocalStorage({
-          accessToken: access_token,
-          tokenType: token_type,
-          expiresIn: expires_in
-        });
-        window.close();
-      } else {
-        document.getElementById("message").textContent =
-          "❌ Spotify authentication failed. Please try again.";
-        console.error("Token not received from Spotify redirect.");
-      }
-    </script>
-  </body>
+    if (window.opener && !window.opener.closed && accessToken) {
+      window.opener.setItemsInLocalStorage({ accessToken, tokenType, expiresIn });
+    }
+    window.close();
+  </script>
+</head>
+<body>
+  Redirecting...
+</body>
 </html>
