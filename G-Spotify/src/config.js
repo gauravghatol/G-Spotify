@@ -1,1 +1,1 @@
-export const APP_URL = "https://g-spotify.vercel.app/login/callback.html";
+export const APP_URL = "https://g-spotify.vercel.app";
