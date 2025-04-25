@@ -1,10 +1,13 @@
 // login.js
-import { APP_URL } from "../config.js";
-import { ACCESS_TOKEN, EXPIRES_IN, TOKEN_TYPE } from "../common.js";
 
+import { APP_URL } from "../config.js";
+import { ACCESS_TOKEN, TOKEN_TYPE, EXPIRES_IN } from "../common.js";
+
+// Read environment variables
 const CLIENT_ID = import.meta.env.VITE_CLIENT_ID;
 const REDIRECT_URI = import.meta.env.VITE_REDIRECT_URI;
 
+// Scopes for Spotify access
 const SCOPES = [
   "user-top-read",
   "user-follow-read",
@@ -13,31 +16,38 @@ const SCOPES = [
 ].join(" ");
 
 if (!CLIENT_ID || !REDIRECT_URI) {
-  alert("Error: Missing Spotify CLIENT_ID or REDIRECT_URI. Check .env setup.");
+  alert("❌ Missing CLIENT_ID or REDIRECT_URI. Please check your .env file.");
+  console.error("CLIENT_ID:", CLIENT_ID);
+  console.error("REDIRECT_URI:", REDIRECT_URI);
 }
 
+// Open Spotify auth popup
 const authorizeUser = () => {
-  const url = `https://accounts.spotify.com/authorize?client_id=${CLIENT_ID}&response_type=token&redirect_uri=${encodeURIComponent(
+  const authUrl = `https://accounts.spotify.com/authorize?client_id=${CLIENT_ID}&response_type=token&redirect_uri=${encodeURIComponent(
     REDIRECT_URI
   )}&scope=${encodeURIComponent(SCOPES)}&show_dialog=true`;
 
-  window.open(url, "Spotify Login", "width=800,height=600");
+  window.open(authUrl, "Spotify Login", "width=800,height=600");
 };
 
+// When DOM is ready
 document.addEventListener("DOMContentLoaded", () => {
   const loginButton = document.getElementById("login-to-spotify");
+
   if (loginButton) {
     loginButton.addEventListener("click", authorizeUser);
+  } else {
+    console.error("❌ Login button not found (id='login-to-spotify'). Check login.html.");
   }
 
-  // If user already has a token, redirect to dashboard
+  // Auto-redirect if token exists
   const token = localStorage.getItem(ACCESS_TOKEN);
   if (token) {
     window.location.href = `${APP_URL}/dashboard/dashboard.html`;
   }
 });
 
-// Called by /login/callback.html window
+// Called by callback.html (via window.opener)
 window.setItemsInLocalStorage = ({ accessToken, tokenType, expiresIn }) => {
   localStorage.setItem(ACCESS_TOKEN, accessToken);
   localStorage.setItem(TOKEN_TYPE, tokenType);
