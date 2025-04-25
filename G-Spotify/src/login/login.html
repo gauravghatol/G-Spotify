@@ -1,26 +1,44 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Spotify Player</title>
-    <link rel="icon" type="image/png" href="../assets/Spotify_Icon_RGB_Green.png" />
+// login.js
+import { APP_URL } from "../config";
+import { ACCESS_TOKEN, TOKEN_TYPE, EXPIRES_IN } from "../common";
 
-    <link rel="stylesheet" href="../style.css" />
-  </head>
-  <body class="h-screen bg-green">
-    <main class="flex h-full w-full items-center justify-center">
-      <section class="flex flex-col items-center gap-8">
-        <img class="h-[20vh]" src="../assets/Spotify_Logo_RGB_Black.png" alt="spotify image" srcset="" />
-        <input
-          id="login-to-spotify"
-          type="button"
-          value="Login to Spotify"
-          class="h-12 w-64 rounded-md bg-black text-white hover:cursor-pointer"
-        />
-      </section>
-    </main>
-    <script type="module" src="login.js"></script>
-  </body>
-</html>
+const CLIENT_ID = import.meta.env.VITE_CLIENT_ID;
+const REDIRECT_URI = import.meta.env.VITE_REDIRECT_URI;
+const SCOPES = [
+  "user-top-read",
+  "user-follow-read",
+  "playlist-read-private",
+  "user-library-read"
+].join(" ");
+
+if (!CLIENT_ID || !REDIRECT_URI) {
+  alert("Error: Missing Spotify CLIENT_ID or REDIRECT_URI. Check .env setup.");
+}
+
+const authorizeUser = () => {
+  const authUrl = `https://accounts.spotify.com/authorize?client_id=${CLIENT_ID}&response_type=token&redirect_uri=${encodeURIComponent(
+    REDIRECT_URI
+  )}&scope=${encodeURIComponent(SCOPES)}&show_dialog=true`;
+
+  window.open(authUrl, "Spotify Login", "width=800,height=600");
+};
+
+document.addEventListener("DOMContentLoaded", () => {
+  const loginButton = document.getElementById("login-to-spotify");
+  loginButton.addEventListener("click", authorizeUser);
+});
+
+// This function is called from callback.html via window.opener
+window.setItemsInLocalStorage = ({ accessToken, tokenType, expiresIn }) => {
+  localStorage.setItem(ACCESS_TOKEN, accessToken);
+  localStorage.setItem(TOKEN_TYPE, tokenType);
+  localStorage.setItem(EXPIRES_IN, Date.now() + expiresIn * 1000);
+  window.location.href = `${APP_URL}/dashboard/dashboard.html`;
+};
+
+// Redirect to dashboard if already logged in
+window.addEventListener("load", () => {
+  if (localStorage.getItem(ACCESS_TOKEN)) {
+    window.location.href = `${APP_URL}/dashboard/dashboard.html`;
+  }
+});
