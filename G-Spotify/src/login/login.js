@@ -2,7 +2,7 @@ import { ACCESS_TOKEN, EXPIRES_IN, TOKEN_TYPE } from "../common";
 import { APP_URL } from "../config";
 
 const CLIENT_ID = import.meta.env.VITE_CLIENT_ID;
-const REDIRECT_URI = `${APP_URL}/login/login.html`;
+const REDIRECT_URI = `${APP_URL}/dashboard/dashboard.html`;
 const scopes = "user-top-read user-follow-read playlist-read-private user-library-read";
 
 const authorizeUser = () => {
